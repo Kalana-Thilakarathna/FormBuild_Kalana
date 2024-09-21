@@ -20,12 +20,8 @@ function SideBar() {
     if (storedFormData) {
       return JSON.parse(storedFormData);
     }
-    return {
-      
-    };
+    return {};
   });
-
-  
 
   useState(() => {
     const storedFormData = localStorage.getItem("formData");
@@ -34,10 +30,10 @@ function SideBar() {
     } else {
       localStorage.setItem("formData", JSON.stringify(formData));
     }
-  },[]);
+  }, []);
 
   return (
-    <div className="rounded-2xl flex flex-col p-5 relative">
+    <div className="rounded-2xl flex flex-col p-5 relative h-full">
       <div className="flex flex-row justify-between mb-5">
         <div className="flex justify-evenly text-lg">
           <button className="text-slate-500 hover:text-blue-700 transition-colors ease-in-out duration-500 flex flex-row items-center">
@@ -59,7 +55,10 @@ function SideBar() {
       <div className="relative flex flex-row bg-neutral-200 p-1 rounded-md px-3 mt-3">
         <div
           className="absolute h-8 bg-white rounded-md transition-transform duration-500 ease-in-out"
-          style={{ width: `${80}px`, transform: `translateX(${tabIndex * 80}px)` }}
+          style={{
+            width: `${80}px`,
+            transform: `translateX(${tabIndex * 80}px)`,
+          }}
         ></div>
         <div className="flex flex-row  z-10">
           {tabs.map((tab) => (
@@ -75,10 +74,12 @@ function SideBar() {
           ))}
         </div>
       </div>
-      {activeTab === "Content" && <Content />}
-      {activeTab === "Design" && <Design />}
-      {activeTab === "Share" && <Share />}
-      {activeTab === "Replies" && <Replies />}
+      <div className="h-full">
+        {activeTab === "Content" && <Content />}
+        {activeTab === "Design" && <Design />}
+        {activeTab === "Share" && <Share />}
+        {activeTab === "Replies" && <Replies />}
+      </div>
     </div>
   );
 }
