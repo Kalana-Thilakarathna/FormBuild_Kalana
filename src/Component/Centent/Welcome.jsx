@@ -1,11 +1,9 @@
-/* eslint-disable no-unused-vars */
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { FaGear } from "react-icons/fa6";
 import "../../App.css";
 import { FormDataContext } from "../../hooks/useFormData";
-import { TbAlignBoxLeftMiddleFilled } from "react-icons/tb";
-import { TbAlignBoxRightMiddleFilled } from "react-icons/tb";
+import { TbAlignBoxLeftMiddleFilled, TbAlignBoxRightMiddleFilled } from "react-icons/tb";
 import { MdOutlineFileUpload } from "react-icons/md";
 
 function Welcome({ onClose }) {
@@ -22,15 +20,20 @@ function Welcome({ onClose }) {
 
   const hanldeimage = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+    if (file && allowedTypes.includes(file.type)) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const imageurl = reader.result;
         updateFormData({ image: imageurl });
       };
       reader.readAsDataURL(file);
+    } else {
+      // Show alert if the file type is not allowed
+      alert("Invalid file type. Only PNG, JPEG, and JPG formats are allowed.");
+      e.target.value = ""; // Clear the file input
     }
-    console.log(file);
   };
 
   const removeimg = () => {
@@ -56,24 +59,22 @@ function Welcome({ onClose }) {
 
   return (
     <div className="bg-white w-full h-full p-2 flex flex-col">
-      <div className="flex justify-between items-center mr-3 mt-1 ">
+      <div className="flex justify-between items-center mr-3 mt-1">
         <div className="flex flex-row items-center">
           <FaGear />
           <h1 className="text-sm font-arial font-semibold ml-3">Settings</h1>
         </div>
-        <div>
-          <button
-            onClick={onClose}
-            className="hover:text-red-400 duration-500 transition-all rounded-md p-1 drop-shadow-md bg-white border-x-2"
-          >
-            <RxCross2 />
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="hover:text-red-400 duration-500 transition-all rounded-md p-1 drop-shadow-md bg-white border-x-2"
+        >
+          <RxCross2 />
+        </button>
       </div>
 
       <div className="mt-7 mr-3">
         <form>
-          <div className="">
+          <div>
             <label>Title</label>
             <input
               type="text"
@@ -112,23 +113,17 @@ function Welcome({ onClose }) {
               className="hidden"
               onChange={hanldeimage}
               ref={fileInputRef}
+              accept=".png,.jpg,.jpeg" // This restricts file selection in the dialog
             />
             <button
               onClick={handleFileInputClick}
               type="button"
-              className="flex flex-row bg-gray-200 rounded-lg  gap-1 px-2 py-1 mt-2 items-center"
+              className="flex flex-row bg-gray-200 rounded-lg gap-1 px-2 py-1 mt-2 items-center"
             >
               <MdOutlineFileUpload className="mr-2" />
               Upload
             </button>
-            {/* <button className=" rounded p-2 bg-gray-300 mt-5 " onClick={hanldeimage}>
-              upload
-            </button> */}
-            {/* {formData.image && (
-              <button onClick={removeimg} className="text-red-500 mt-5">
-                Remove Image
-              </button>
-            )} */}
+
             {formData.image && (
               <>
                 <div className="flex flex-col justify-center items-center">
@@ -161,6 +156,7 @@ function Welcome({ onClose }) {
                 </div>
               </>
             )}
+
             <div className="flex flex-row justify-evenly gap-2">
               <div>
                 <button
